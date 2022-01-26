@@ -1,32 +1,97 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <a-config-provider prefixCls="cns">
+    <section id="cns-main-app">
+      <section class="cns-menu-wrapper">
+        <main-menu :menus="menus" />
+      </section>
+      <section class="cns-frame-wrapper">
+        <!-- 主应用渲染区，用于挂载主应用路由触发的组件 -->
+        <router-view v-show="$route.name" />
+        <!-- 子应用渲染区，用于挂载子应用节点 -->
+        <section v-show="!$route.name" id="frame" />
+      </section>
+    </section>
+  </a-config-provider>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import MainMenu from "@/components/menu/index.vue";
+
+@Component({
+  components: {
+    MainMenu,
+  },
+})
+export default class App extends Vue {
+  menus = [
+    {
+      key: "Home",
+      title: "主页",
+      path: "/",
+    },
+    {
+      key: "VueMicroApp",
+      title: "Vue 主页",
+      path: "/vue",
+    },
+    {
+      key: "VueMicroAppList",
+      title: "Vue 列表页",
+      path: "/vue/list",
+    },
+    {
+      key: "ReactMicroApp",
+      title: "React 主页",
+      path: "/react",
+    },
+    {
+      key: "ReactMicroAppList",
+      title: "React 列表页",
+      path: "/react/list",
+    },
+  ];
+}
+</script>
+
+<style lang="less" scoped>
+#cns-main-app {
+  height: 100%;
+  position: relative;
+  .cns-menu-wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 40;
+    width: 172px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .cns-nav-wrapper {
+    position: fixed;
+    width: 100%;
+    min-width: 1060px;
+    padding-left: 172px;
+    left: 0;
+    top: 0;
+    z-index: 30;
+  }
 }
 
-#nav {
-  padding: 30px;
+.cns-frame-wrapper {
+  padding-left: 172px;
+  flex-grow: 1;
+  height: 100%;
+  width: 100%;
+  position: relative;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+#cns-frame {
+  width: 100%;
+  height: 100%;
+  > :first-child {
+    height: 100%;
+  }
 }
 </style>
